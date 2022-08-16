@@ -14,6 +14,10 @@ def index(request):
 def analyse(request):
     djtext = request.GET.get('text', 'default')
     removepunc = request.GET.get('removepunc', 'off')
+    fullcaps = request.GET.get('fullcaps','off')
+    newline = request.GET.get('newline','off')
+    spaceremove = request.GET.get('spaceremove','off')
+    counter = request.GET.get('counter','off')
     print(djtext)
     analysed = ""
     if removepunc == "on":
@@ -24,6 +28,40 @@ def analyse(request):
         params = {'purpose': 'Removed Punctuations', 'analysed_text' : analysed}
 
         return render(request, 'analyse.html', params)
+    elif(fullcaps == "on"):
+        analysed = ""
+        for char in djtext:
+            analysed = ""
+            for char in djtext:
+                analysed = analysed + char.upper()
+        params = {'purpose':'Changed to Uppercase', 'analysed_text' : analysed}
+        return render(request, 'analyse.html', params)
+    elif(newline == "on"):
+        analysed = ""
+        for char in djtext:
+            if char != "\n":
+                analysed = analysed + char
+        params = {'purpose':'Removed New Lines', 'analysed_text' : analysed}
+        return render(request, 'analyse.html', params)
+    elif(spaceremove == "on"):
+        analysed = ""
+        for index, char in enumerate(djtext):
+            if djtext[index] == " " and djtext[index+1] == " ":
+                pass
+            else:
+                analysed = analysed + char
+        params = {'purpose':'Removed Extra Spaces', 'analysed_text' : analysed}
+        return render(request, 'analyse.html', params)
+    elif(counter == "on"):
+        analysed = ""
+        count = 0
+        for  char in djtext:
+            count += 1
+        analysed = count
+
+
+        params = {'purpose':'Counting the number of Characters in the String ', 'analysed_text' : analysed}
+        return render(request, 'analyse.html', params)
     else:
         return HttpResponse("Error")
 
@@ -31,33 +69,6 @@ def exl(request):
     s = '''<h2>Navigation Bar <br></h2>
     <a href="https://www.youtube.com/">Youtube</a><br><a href="https://www.youtube.com/">Youtube</a><br><a href="https://www.youtube.com/">Youtube</a><br><a href="https://www.youtube.com/">Youtube</a><br>
   '''
+
     return HttpResponse(s)
 
-# @csrf_exempt
-# def departmentApi(reuqest,id=0):
-#     if reuqest.method == 'GET':
-#         departments = Department.objects.all()
-#         departments_serializer = DepartmentSerializer(departments,many=True)
-#         return JsonResponse(departments_serializer.data,safe=False)
-#     elif reuqest.method == 'POST':
-#         department_data = JSONParser().parse(reuqest)
-#         department_serializer = DepartmentSerializer(data = department_data)
-#         if department_serializer.is_valid():
-#             department_serializer.save()
-#             return JsonResponse("Added Successfully", safe = False)
-#           return JsonResponse("Failed to Add", safe = False)
-#     elif reuqest.method == 'PUT':
-#         department_data = JSONParser().parse(reuqest)
-#         department = Department.objects.get(DepartmentId = department_data['DepartmentId'])
-#         department_serializer = DepartmentSerializer(department,data = department_data)
-#         if department_serializer.is_valid():
-#             department_serializer.save()
-#             return JsonResponse("Update Successfully", safe = False)
-#         return JsonResponse("Failed to Update")
-#     elif reuqest.method == 'DELETE':
-#         department = Department.objects.get(DepartmentId = id)
-#         department.delete()
-#         return JsonResponse("Deleted Successfully" ,safe = True)
-#
-#
-#
