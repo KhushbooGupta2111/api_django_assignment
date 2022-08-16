@@ -19,8 +19,8 @@ from api_django_app import views
 
 urlpatterns = [
     path('',views.index),
-    path('analyse/',views.analyse),
-    path('exl/',views.exl),
+    path('analyze/',views.analyze),
+    path('ex1/',views.ex1),
     path('admin/', admin.site.urls),
 
 ]
